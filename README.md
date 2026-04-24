@@ -1,73 +1,49 @@
-# React + TypeScript + Vite
+# Grabbit 🛒
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**AI-powered shared shopping list** — Strategico Marketplace app
 
-Currently, two official plugins are available:
+**Live:** https://strategico-grabbit.netlify.app
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- ⚡ **Instant list** — opens straight to your shopping list, no splash screen
+- ✅ **Check items** — tap to check, moves to done section
+- 🗑️ **Swipe to delete** — or tap the × button
+- 📸 **Photo OCR** — take a photo of a receipt, shelf, or label → AI extracts product names
+- 📷 **Barcode scan** — uses BarcodeDetector API (Chrome/Android) to scan product barcodes
+- ✨ **AI suggestions** — Anthropic-powered suggestions based on your history
+- 🤝 **Shared lists** — invite anyone via link, real-time sync via Supabase Realtime
+- 📋 **Multiple lists** — Weekly Groceries, Braai List, Hardware Store, etc.
+- 💳 **Credit system** — AI features cost 1 marketplace credit each
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech Stack
 
-## Expanding the ESLint configuration
+- React + TypeScript + Vite + Tailwind CSS
+- Supabase (marketplace project: `amkdgoqttpkacktygigs`)
+- Supabase Realtime for shared list sync
+- Edge Functions: `shopping-ocr`, `shopping-barcode`, `shopping-suggest`
+- Anthropic Claude for OCR + suggestions
+- Open Food Facts API for barcode lookup
+- Netlify hosting
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Auth
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Uses Strategico Marketplace auth — same account as AskVinny/Arnie.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Development
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+cp .env.example .env.local  # Fill in Supabase credentials
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Deploy
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Pushes automatically deploy to Netlify. Supabase edge functions:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+supabase functions deploy shopping-ocr --project-ref amkdgoqttpkacktygigs
+supabase functions deploy shopping-barcode --project-ref amkdgoqttpkacktygigs
+supabase functions deploy shopping-suggest --project-ref amkdgoqttpkacktygigs
 ```
